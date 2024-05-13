@@ -12,3 +12,86 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+//table 
+model User {
+    id_user String @id
+    pseudo String
+    password String
+    email String
+    posts Post[]
+    comments Comment[]
+    likes Like[]
+}
+
+model Receip {
+    id_receip String @id
+    Receip_Type String
+    Time_Of_Preparation DateTime
+    ingredients IngredientInReceip[]
+    materials MaterialInReceip[]
+    posts Post[]
+}
+
+model Ingredient {
+    id_ingredient String @id
+    Name String
+    receips IngredientInReceip[]
+}
+
+model IngredientInReceip {
+    id String @id @default(uuid())
+    quantity Int
+    unit String
+    receipId String
+    ingredientId String
+    receip Receip @relation(fields: [receipId], references: [id_receip])
+    ingredient Ingredient @relation(fields: [ingredientId], references: [id_ingredient])
+}
+
+model Material {
+    id_material String @id
+    Name String
+    receips MaterialInReceip[]
+}
+
+model MaterialInReceip {
+    id String @id @default(uuid())
+    quantity Int
+    unit String
+    receipId String
+    materialId String
+    receip Receip @relation(fields: [receipId], references: [id_receip])
+    material Material @relation(fields: [materialId], references: [id_material])
+}
+
+model Post {
+    id_post String @id
+    Title String
+    Content String
+    Date DateTime
+    User User @relation(fields: [idUser], references: [id_user])
+    idUser String @map("id_user")
+    Receip Receip @relation(fields: [idReceip], references: [id_receip])
+    idReceip String
+    comments Comment[]
+    likes Like[]
+}
+
+model Comment {
+    id_comment String @id
+    Content String
+    Date DateTime
+    User User @relation(fields: [idUser], references: [id_user])
+    idUser String @map("id_user")
+    Post Post @relation(fields: [idPost], references: [id_post])
+    idPost String @map("id_post")
+}
+
+model Like {
+    id_like String @id
+    User User @relation(fields: [idUser], references: [id_user])
+    idUser String @map("id_user")
+    Post Post @relation(fields: [idPost], references: [id_post])
+    idPost String @map("id_post")
+}
