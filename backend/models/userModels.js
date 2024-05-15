@@ -1,5 +1,5 @@
-const {PrismaClient} = require('@prisma/client');
-const {v4: uuidv4} = require('uuid');
+const { PrismaClient } = require('@prisma/client');
+const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcryptjs');
 
 const prisma = new PrismaClient();
@@ -17,7 +17,8 @@ async function createUser(data) {
     }
     catch (error) {
         throw new Error(`Error creating user' : ${error.message}`);
-    }}
+    }
+}
 
 async function loginUser(data) {
     try {
@@ -42,7 +43,8 @@ async function loginUser(data) {
         }
 
         // If the passwords match, the login is successful
-        return user;
+        //send a token to the client
+        
     } catch (error) {
         throw new Error(`Error logging in: ${error.message}`);
     }

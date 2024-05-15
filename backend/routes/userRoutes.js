@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const indexController = require('../controllers/indexController');
-const userRoutes = require('../models/User');
+const indexController = require('../controllers/indexControllers');
+const userRoutes = require('../models/userModels');
 
 router.get('/' , (req, res) => {
     
-    res.send('User created');
+    res.send('Hello World!');
 });
 
 module.exports = router;

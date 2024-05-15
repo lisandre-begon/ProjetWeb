@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-const userRouter = require('./routes/User');
+const userRouter = require('./routes/userRoutes');
 app.use('/user', userRouter);
 
 app.get('/', (req, res) => {
