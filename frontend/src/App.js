@@ -1,8 +1,8 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+// Make sure these components exist and are spelled correctly
 import About from "./pages/About";
-import ProtectedRoute  from "./pages/ProtectedRoute.js";
 import Profil from "./pages/Profil";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -16,11 +16,12 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <ProtectedRoute path="/profil" element={<Profil />} />
+        <Route path="/profil" element={<Profil />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
 }
 
+// Add this line to export your App component
 export default App;

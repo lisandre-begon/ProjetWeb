@@ -1,36 +1,59 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import '../styles/Login.css';
 
-const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Login = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:5000/login', { email, password });
-      console.log(response.data);
-    } catch (error) {
-      console.error(`Error: ${error}`);
-    }
-  };
+    const handleLogin = async (event) => {
+        event.preventDefault(); // Prevent the form from being submitted normally
 
-  return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-        </label>
-        <label>
-          Password:
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    </div>
-  );
+        const data = {
+            email: email,
+            password: password
+        };
+
+        try {
+            const response = await axios.post('http://localhost:5000/login', data, {
+                withCredentials: true
+            });
+
+            // handle successful login
+            console.log(response.data);
+        } catch (error) {
+            // handle error
+            console.error(`Error: ${error}`);
+        }
+    };
+
+    return (
+        <div className="ring">
+            <i style={{ "--clr": "#00ff0a" }}></i>
+            <i style={{ "--clr": "#ff0057" }}></i>
+            <i style={{ "--clr": "#fffd44" }}></i>
+            <div className="login">
+                <h2>Login</h2>
+                <form onSubmit={handleLogin}>
+                    <div className="inputBx">
+                        <input type="text" placeholder="Username" value={email} onChange={e => setEmail(e.target.value)} />
+                    </div>
+                    <div className="inputBx">
+                        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                    </div>
+                    <div className="inputBx">
+                        <input type="submit" value="Sign in" />
+                    </div>
+                </form>
+                <div className="inputBx">
+                    <Link to="/register">
+                        <button>Register</button>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
 };
 
-export default LoginPage;
+export default Login;
