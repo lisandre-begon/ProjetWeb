@@ -87,34 +87,40 @@ const Home = () => {
       <div className="app-container">
         <header className="header">
           <nav>
-            <a href="#first">One </a>
-            <a href="#second">Two </a>
-            <a href="#third">Three </a>
-            <a href="#fourth">Four </a>
-            <a href="#fifth">Five</a>
+            <a href="#first">Recettes </a>
+            <a href="#second">Communauté </a>
+            <a href="#third">Profil </a>
+            <a href="#fourth">Ingrédients </a>
+            <a href="#fifth">Défi du jour</a>
           </nav>
         </header>
-        <Section id="first" title="City Skyline" className="first" bgUrl="https://images.unsplash.com/photo-1605629713998-167cdc70afa2?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1NTR8&ixlib=rb-4.0.3&q=85" />
-        <Section id="second" title="Flowers of friendship" className="second" bgUrl="https://images.unsplash.com/photo-1503796964332-e25e282e390f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1NTR8&ixlib=rb-4.0.3&q=85" />
-        <Section id="third" title="Waves in the Ocean" className="third" bgUrl="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1OTh8&ixlib=rb-4.0.3&q=85" />
-        <Section id="fourth" title="New York City" className="fourth" bgUrl="https://images.unsplash.com/photo-1584351583369-6baf055b51a7?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
-        <Section id="fifth" title="dark side of the moon" className="fifth" bgUrl="https://images.unsplash.com/photo-1516663713099-37eb6d60c825?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
+        <Section id="first" title="Recettes" className="first" videoUrl={"/video/pizza.mp4"} />
+        <Section id="second" title="Communauté" className="second" bgUrl="https://images.unsplash.com/photo-1503796964332-e25e282e390f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1NTR8&ixlib=rb-4.0.3&q=85" />
+        <Section id="third" title="Profil" className="third" bgUrl="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1OTh8&ixlib=rb-4.0.3&q=85" />
+        <Section id="fourth" title="Ingrédients" className="fourth" bgUrl="https://images.unsplash.com/photo-1584351583369-6baf055b51a7?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
+        <Section id="fifth" title="Défi du jour" className="fifth" bgUrl="https://images.unsplash.com/photo-1516663713099-37eb6d60c825?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
       </div>
     );
   };
-  const Section = ({ id, title, className, bgUrl }) => {
+  const Section = ({ id, title, className, bgUrl, videoUrl }) => {
     return (
       <section id={id} className={`section ${className}`}>
         <div className="wrapper-outer">
           <div className="wrapper-inner">
             <div className="background" style={{ backgroundImage: `url(${bgUrl})` }}>
               <h2 className="section-title">{title}</h2>
+              {videoUrl && (
+                <video controls>
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
             </div>
           </div>
         </div>
       </section>
     );
-  };
+  }
   ReactDOM.render(<Home />, document.getElementById("root"));
 export default Home;
 
