@@ -94,7 +94,7 @@ const Home = () => {
             <a href="#fifth">Défi du jour</a>
           </nav>
         </header>
-        <Section id="first" title="Recettes" className="first" videoUrl={"/video/pizza.mp4"} />
+        <Section id="first" title="Recettes" className="first" videoUrl={"/video/omelet.mp4"} />
         <Section id="second" title="Communauté" className="second" bgUrl="https://images.unsplash.com/photo-1503796964332-e25e282e390f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1NTR8&ixlib=rb-4.0.3&q=85" />
         <Section id="third" title="Profil" className="third" bgUrl="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1OTh8&ixlib=rb-4.0.3&q=85" />
         <Section id="fourth" title="Ingrédients" className="fourth" bgUrl="https://images.unsplash.com/photo-1584351583369-6baf055b51a7?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
@@ -102,25 +102,24 @@ const Home = () => {
       </div>
     );
   };
-  const Section = ({ id, title, className, bgUrl, videoUrl }) => {
-    return (
-      <section id={id} className={`section ${className}`}>
-        <div className="wrapper-outer">
-          <div className="wrapper-inner">
-            <div className="background" style={{ backgroundImage: `url(${bgUrl})` }}>
-              <h2 className="section-title">{title}</h2>
-              {videoUrl && (
-                <video controls>
-                  <source src={videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              )}
-            </div>
+const Section = ({ id, title, className, bgUrl, videoUrl }) => {
+  return (
+    <section id={id} className={`section ${className}`}>
+      <div className="wrapper-outer">
+        <div className="wrapper-inner">
+          <div className="background" style={{ backgroundImage: `url(${bgUrl})` }}>
+            <h2 className="section-title">{title}</h2>
+            {videoUrl && (
+              <video autoPlay loop muted>
+                <source src={videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
           </div>
         </div>
-      </section>
-    );
-  }
-  ReactDOM.render(<Home />, document.getElementById("root"));
+      </div>
+    </section>
+  );
+};  ReactDOM.render(<Home />, document.getElementById("root"));
 export default Home;
 
