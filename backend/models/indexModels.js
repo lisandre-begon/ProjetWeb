@@ -57,38 +57,67 @@ async function loginUser(data, res) {
     }
 }
 
-async function updatePassword(data) {
+async function logoutUser(req, res) {
     try {
-        const user = await prisma.user.update({
-            where: {
-                email: data.email
-            },
-            data: {
-                password: bcrypt.hashSync(data.password, 8),
-            }
-        });
-    }
-    catch (error) {
-        throw new Error(`Error updating password' : ${error.message}`);
+        // Clear the token cookie
+        res.clearCookie('token');
+        // Send a response to the client
+        res.status(200).json({ auth: false, token: null, message: 'You have been logged out.' });
+    } catch (error) {
+        // Send an error response to the client
+        res.status(500).json({ error: `Error during logout: ${error.message}` });
     }
 }
 
-async function updatePseudo(data) {
+// Middleware to verify JWT token
+function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(403).send({ auth: false, message: 'No token provided.' });
+    }
+    jwt.verify(token, 'tiensletoken', (err, decoded) => {
+        if (err) {
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
+        }
+        // if everything good, save to request for use in other routes
+        req.userId = decoded.id;
+        next();
+    });
+}
+
+async function updatePassword(req, res) {
     try {
         const user = await prisma.user.update({
             where: {
-                email: data.email
+                id: req.userId
             },
             data: {
-                pseudo: data.pseudo,
+                password: bcrypt.hashSync(req.body.password, 8),
             }
         });
+        return user;
     }
     catch (error) {
-        throw new Error(`Error updating pseudo' : ${error.message}`);
+        throw new Error(`Error updating password: ${error.message}`);
     }
 }
 
+async function updatePseudo(req, res) {
+    try {
+        const user = await prisma.user.update({
+            where: {
+                id: req.userId
+            },
+            data: {
+                pseudo: req.body.pseudo,
+            }
+        });
+        return user;
+    }
+    catch (error) {
+        throw new Error(`Error updating pseudo: ${error.message}`);
+    }
+}
 async function deleteUser(data) {
     try {
         const user = await prisma.user.delete({
@@ -113,4 +142,4 @@ async function getUser(data) {
     }
 }
 
-module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser };
+module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser };
