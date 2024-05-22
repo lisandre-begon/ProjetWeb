@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = new PrismaClient();
 
-async function createUser(data) {
+async function createUser(data, res) {
     try {
         const user = await prisma.user.create({
             data: {
@@ -14,11 +14,12 @@ async function createUser(data) {
                 pseudo: data.pseudo,
             },
         });
-        return user;
-        
+        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true });
+        res.status(200).json({ user, auth: true, token: token });
     }
     catch (error) {
-        throw new Error(`Error creating user' : ${error.message}`);
+        res.status(500).json({ error: `Error creating user: ${error.message}` });
     }
 }
 

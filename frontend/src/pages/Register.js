@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -13,25 +14,22 @@ const Register = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Send the POST request to your server
-        fetch('http://localhost:5000/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                // Handle the response from the server
-                console.log(data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+    
+        try {
+            const response = await axios.post('http://localhost:5000/register', formData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
+    
+            // Handle the response from the server
+            console.log(response.data);
+            window.location.href = "/";
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     return (

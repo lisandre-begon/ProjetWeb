@@ -5,7 +5,7 @@ const {createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser}
 exports.createUser = async (req, res) => {
     try {
         const data = req.body;
-        const userData = await createUser(data);
+        const userData = await createUser(data,res);
         res.json(userData);
     }
     catch (error) {
