@@ -22,6 +22,7 @@ const Login = () => {
 
             // handle successful login
             console.log(response.data);
+            window.location.href = "/";
         } catch (error) {
             // handle error
             console.error(`Error: ${error}`);
@@ -37,13 +38,14 @@ const Login = () => {
                 <h2>Login</h2>
                 <form onSubmit={handleLogin}>
                     <div className="inputBx">
-                        <input type="text" placeholder="Username" value={email} onChange={e => setEmail(e.target.value)} />
+                        <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
                     </div>
                     <div className="inputBx">
-                        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
                     </div>
                     <div className="inputBx">
                         <input type="submit" value="Sign in" />
+                        
                     </div>
                 </form>
                 <div className="inputBx">

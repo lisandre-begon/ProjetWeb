@@ -15,11 +15,10 @@ datasource db {
 
 //table 
 model User {
-    id_user String @id
+    id String @id @default(cuid())
     pseudo String
     password String
-    email String
-    isAdmin Boolean
+    email String @unique
     posts Post[]
     comments Comment[]
     likes Like[]
@@ -71,7 +70,7 @@ model Post {
     Title String
     Content String
     Date DateTime
-    User User @relation(fields: [idUser], references: [id_user])
+    User User @relation(fields: [idUser], references: [id])
     idUser String @map("id_user")
     Receip Receip @relation(fields: [idReceip], references: [id_receip])
     idReceip String
@@ -83,16 +82,16 @@ model Comment {
     id_comment String @id
     Content String
     Date DateTime
-    User User @relation(fields: [idUser], references: [id_user])
-    idUser String @map("id_user")
+    User User @relation(fields: [idUser], references: [id])
+    idUser String @map("id")
     Post Post @relation(fields: [idPost], references: [id_post])
     idPost String @map("id_post")
 }
 
 model Like {
     id_like String @id
-    User User @relation(fields: [idUser], references: [id_user])
-    idUser String @map("id_user")
+    User User @relation(fields: [idUser], references: [id])
+    idUser String @map("id")
     Post Post @relation(fields: [idPost], references: [id_post])
     idPost String @map("id_post")
 }

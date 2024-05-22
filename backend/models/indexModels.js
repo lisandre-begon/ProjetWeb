@@ -14,13 +14,16 @@ async function createUser(data) {
                 pseudo: data.pseudo,
             },
         });
+        return user;
+        
     }
     catch (error) {
         throw new Error(`Error creating user' : ${error.message}`);
     }
 }
 
-async function loginUser(data) {
+async function loginUser(data, res) {
+    console.log(process.env.DATABASE_URL);
     try {
         const user = await prisma.user.findUnique({
             where: {
@@ -40,17 +43,18 @@ async function loginUser(data) {
 
         // If the passwords match, the login is successful
         // Generate a token
-        const token = jwt.sign({ id: user.id }, 'your-secret-key', { expiresIn: '1h' });
-
+        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1h' });
+        // Set the token as a cookie
+        res.cookie('token', token, { httpOnly: true });
         // Send the token to the client
         return { auth: true, token: token };
+        
 
     } catch (error) {
+        console.error(error.stack);
         throw new Error(`Error logging in: ${error.message}`);
     }
 }
-
-module.exports = { createUser, loginUser };
 
 async function updatePassword(data) {
     try {
@@ -100,8 +104,12 @@ async function deleteUser(data) {
 async function getUser(data) {
     try {
         const user = await prisma.user.findMany({});
+        return user;
+
     }
     catch (error) {
         throw new Error(`Error getting users' : ${error.message}`);
     }
 }
+
+module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser };

@@ -1,6 +1,8 @@
-const {userModels} = require('../models/userModels');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const {createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser} = require('../models/indexModels');
 
-exports.register = async (req, res) => {
+exports.createUser = async (req, res) => {
     try {
         const data = req.body;
         const userData = await createUser(data);
@@ -11,14 +13,17 @@ exports.register = async (req, res) => {
     }
 }
 
-exports.login = async (req, res) => {
+exports.loginUser = async (req, res) => {
     try {
         const data = req.body;
-        const user = await loginUser(data);
+        const user = await loginUser(data, res);
         res.json({ message: "Login successful", user: user });
     }
     catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error(error); 
+        if (error.message === "No user found with this email") {
+            return res.status(400).json({ message: "Invalid password or email"});
+        }else {res.status(500).json({ error: error.message })}
     }
 }
 
@@ -33,7 +38,7 @@ exports.updatePassword = async (req, res) => {
     }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updatePseudo = async (req, res) => {
     try {
         const data = req.body;
         const user = await updatePseudo(data);
@@ -46,8 +51,23 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
     try {
-        const data = req.body;
-        const user = await deleteUser(data);
+        const email = req.params.email;
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const user = await prisma.user.delete({
+            where: {
+                email: email
+            }
+        });
+
         res.json({ message: "User deleted", user: user });
     }
     catch (error) {
