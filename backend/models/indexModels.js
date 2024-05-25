@@ -166,4 +166,4 @@ async function getUser(data) {
     }
 }
 
-module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser, };
+module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser, checkAdmin };

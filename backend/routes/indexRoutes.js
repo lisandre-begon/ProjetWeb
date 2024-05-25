@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, logoutUser, } = require('../controllers/indexControllers');
+const { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, logoutUser, checkAdmin} = require('../controllers/indexControllers');
 const { verifyToken } = require('../controllers/verifyTokenControllers')
 
 router.get('/getUser', getUser);
 router.get('/logout', logoutUser);
 router.post('/register', createUser);
 router.post('/login', loginUser);
+router.get('/admin', checkAdmin);
 router.put('/updatePassword', verifyToken, updatePassword);
 router.put('/updatePseudo', verifyToken, updatePseudo);
 router.delete('/:email', deleteUser);

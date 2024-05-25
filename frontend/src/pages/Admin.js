@@ -5,7 +5,7 @@ const Admin = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const response = await axios.get('/admin');
+                const response = await axios.get('http://localhost:5000/admin');
                 if (!response.data.isAdmin) {
                     window.location.href = '/ProfilUser';
                 }
@@ -21,7 +21,7 @@ const Admin = () => {
 
     const deleteUser = async () => {
         try {
-            const response = await axios.delete('/api/deleteUser', {
+            const response = await axios.delete('http://localhost:5000/deleteUser', {
                 data: { email },
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Admin = () => {
 
     const getUser = async () => {
         try {
-            const response = await axios.get('../../../backend/routes/indexRoutes', {
+            const response = await axios.get('http://localhost:5000/indexRoutes', {
                 headers: {
                     'Content-Type': 'application/json',
                 },
