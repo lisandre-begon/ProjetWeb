@@ -12,13 +12,14 @@ async function createUser(data, res) {
                 email: data.email,
                 password: bcrypt.hashSync(data.password, 8),
                 pseudo: data.pseudo,
+                isadmin: data.isadmin || false,
             },
         });
         const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1 hour' });
         res.cookie('token', token, {
             expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
             httpOnly: true,
-            sameSite: true,
+            sameSite: 'Lax',
         }).status(200).json({ user, auth: true, token: token });
 
     }
@@ -53,7 +54,7 @@ async function loginUser(data, res) {
         res.cookie('token', token, {
             expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
             httpOnly: true,
-            sameSite: true, // set 'SameSite' attribute to 'None'
+            sameSite: 'Lax',
           });
         return { auth: true, token: token };
         
@@ -74,23 +75,6 @@ async function logoutUser(res) {
         // Send an error response to the client
         res.status(500).json({ error: `Error during logout: ${error.message}` });
     }
-}
-
-// Middleware to verify JWT token
-function verifyToken(req, res, next) {
-    const token = req.cookies.token;
-    console.log("aaaaa");
-    if (!token) {
-        return res.status(403).send({ auth: false, message: 'No token provided.' });
-    }
-    jwt.verify(token, 'tiensletoken', (err, decoded) => {
-        if (err) {
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-        }
-        // if everything good, save to request for use in other routes
-        req.userId = decoded.id;
-        next();
-    });
 }
 
 async function updatePassword(req, res) {
@@ -135,10 +119,10 @@ async function checkAdmin(req, res) {
                 isadmin: true
             }
         });
-        res.json({ isAdmin: user !== null });
-    }
-    catch (error) {
-        res.status(500).json({ error: `Error checking auth: ${error.message}` });
+        return user !== null; // Returns true if the user is admin, otherwise false
+    } catch (error) {
+        console.error(`Error checking auth: ${error.message}`);
+        return false; // In case of an error, consider the user as not admin
     }
 }
 
@@ -166,4 +150,4 @@ async function getUser(data) {
     }
 }
 
-module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser, checkAdmin };
+module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, logoutUser, checkAdmin };

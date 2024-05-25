@@ -33,9 +33,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/profil" element={<ProfilUser />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profil" element={<Admin />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

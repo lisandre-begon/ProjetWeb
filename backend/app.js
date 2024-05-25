@@ -1,40 +1,37 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 const indexRouter = require('./routes/indexRoutes');
 const http = require('http');
-const morgan = require('morgan');
 
 const app = express();
+const { checkAdmin } = require('./controllers/indexControllers');
+const { verifyToken } = require('./controllers/verifyTokenControllers');
 
 app.use(cookieParser());
 app.use(morgan('dev'));
 
 app.use(cors({
-  origin: function (origin, callback) {
-    callback(null, true)
-  },
+  origin: 'http://localhost:3000', // Adjust according to your frontend domain
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const index = require('./routes/indexRoutes');
-const receipt = require('./routes/receiptRoutes');
-
-
 app.use('/', indexRouter);
 
-app.get('/profil', async (req, res) => {
-  if (await checkAdmin(req, res)) {
-      res.redirect('/admin-page');
+app.get('/profil', verifyToken, async (req, res) => {
+  const isAdmin = await checkAdmin(req, res);
+  if (isAdmin) {
+      res.redirect('/admin');
   } else {
-      res.redirect('/user-page');
+      res.redirect('/');
   }
 });
 
-app.listen(process.env.SERVER_PORT, () => {
-  console.log(`Server running on port ${process.env.SERVER_PORT}`)
+const port = process.env.SERVER_PORT || 5000; // Default to 5000 if SERVER_PORT is not defined
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
 const server = http.createServer(app);
-

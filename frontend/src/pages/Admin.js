@@ -5,15 +5,17 @@ const Admin = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/admin');
-                if (!response.data.isAdmin) {
-                    window.location.href = '/ProfilUser';
+                const response = await axios.get('http://localhost:5000/admin', { withCredentials: true });
+                if (response.status === 200 && response.data.isAdmin) {
+                    console.log('User is admin');
+                } else {
+                    window.location.href = '/profil';
                 }
             } catch (error) {
                 console.error('Failed to check admin status', error);
+                window.location.href = '/login';
             }
         };
-    
         checkAdmin();
     }, []);
 
@@ -21,18 +23,15 @@ const Admin = () => {
 
     const deleteUser = async () => {
         try {
-            const response = await axios.delete('http://localhost:5000/deleteUser', {
+            const response = await axios.delete(`http://localhost:5000/${email}`, {
                 data: { email },
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
             });
-    
+
             if (response.status === 200) {
-                // User deleted successfully
                 console.log('User deleted');
             } else {
-                // Handle error
                 console.error('Failed to delete user');
             }
         } catch (error) {
@@ -42,18 +41,15 @@ const Admin = () => {
 
     const getUser = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/indexRoutes', {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+            const response = await axios.get('http://localhost:5000/getUser', {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
             });
-    
+
             if (response.status === 200) {
                 const user = response.data;
-                // Do something with the user data
                 console.log('User:', user);
             } else {
-                // Handle error
                 console.error('Failed to get user');
             }
         } catch (error) {

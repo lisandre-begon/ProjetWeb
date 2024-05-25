@@ -87,7 +87,26 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+exports.checkAdmin = async (req, res) => {
+    try {
+        if (!req.userId) {
+            console.log("User ID is required");
+            return res.status(400).json({ error: 'User ID is required' });
+        }
 
+        const user = await prisma.user.findUnique({
+            where: {
+                id: req.userId,
+                isadmin: true
+            }
+        });
+        res.json({ isAdmin: user !== null });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({ error: `Error checking auth: ${error.message}` });
+    }
+}
 exports.getUser = async (req, res) => {
     try {
         const data = req.body;
