@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../styles/LogReg.css';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -9,6 +12,14 @@ const Register = () => {
     });
 
     const { email, password, pseudo } = formData;
+    const navigate = useNavigate();
+    const isAuthenticated = Cookies.get('token');
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/');
+        }
+    }, [isAuthenticated, navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,6 +30,7 @@ const Register = () => {
     
         try {
             const response = await axios.post('http://localhost:5000/register', formData, {
+                withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -26,48 +38,41 @@ const Register = () => {
     
             // Handle the response from the server
             console.log(response.data);
-            window.location.href = "/";
+            navigate('/');
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     return (
-        <div>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={email}
-                        onChange={handleChange}
-                    />
+        <div className="ring">
+            <i style={{ "--clr": "#00ff0a" }}></i>
+            <i style={{ "--clr": "#ff0057" }}></i>
+            <i style={{ "--clr": "#fffd44" }}></i>
+            <div className="login">
+                <h2>Register</h2>
+                {!isAuthenticated && (
+                    <form onSubmit={handleSubmit}>
+                        <div className="inputBx">
+                            <input type="email" name="email" placeholder="Email" value={email} onChange={handleChange} required />
+                        </div>
+                        <div className="inputBx">
+                            <input type="password" name="password" placeholder="Password" value={password} onChange={handleChange} required />
+                        </div>
+                        <div className="inputBx">
+                            <input type="text" name="pseudo" placeholder="Pseudo" value={pseudo} onChange={handleChange} required />
+                        </div>
+                        <div className="inputBx">
+                            <input type="submit" value="Sign up" />
+                        </div>
+                    </form>
+                )}
+                <div className="inputBx">
+                    <Link to="/login">
+                        <button>Login</button>
+                    </Link>
                 </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="pseudo">Pseudo:</label>
-                    <input
-                        type="text"
-                        id="pseudo"
-                        name="pseudo"
-                        value={pseudo}
-                        onChange={handleChange}
-                    />
-                </div>
-                <button type="submit">Register</button>
-            </form>
+            </div>
         </div>
     );
 };

@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const {createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser} = require('../models/indexModels');
 const jwt = require('jsonwebtoken');
 
+
 exports.createUser = async (req, res) => {
     try {
         const data = req.body;
@@ -40,20 +41,6 @@ exports.logoutUser = async (req, res) => {
     }
 }
 
-exports.verifyToken = (req, res, next) => {
-    const token = req.cookies.token;
-    if (!token) {
-        return res.status(403).send({ auth: false, message: 'No token provided.' });
-    }
-    jwt.verify(token, 'tiensletoken', (err, decoded) => {
-        if (err) {
-            return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-        }
-        // if everything good, save to request for use in other routes
-        req.userId = decoded.id;
-        next();
-    });
-}
 
 exports.updatePassword = async (req, res) => {
     try {

@@ -22,10 +22,16 @@ app.use(express.urlencoded({ extended: true }));
 const index = require('./routes/indexRoutes');
 const receipt = require('./routes/receiptRoutes');
 
-app.get('/', (req, res) => res.send('Hello World!'));
-
 
 app.use('/', indexRouter);
+
+app.get('/profil', async (req, res) => {
+  if (await checkAdmin(req, res)) {
+      res.redirect('/admin-page');
+  } else {
+      res.redirect('/user-page');
+  }
+});
 
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Server running on port ${process.env.SERVER_PORT}`)

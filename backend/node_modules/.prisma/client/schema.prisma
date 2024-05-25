@@ -5,93 +5,90 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 //table 
-model User {
-    id String @id @default(cuid())
-    pseudo String
+model user {
+    id       String    @id @default(cuid())
+    pseudo   String
     password String
-    email String @unique
-    posts Post[]
-    comments Comment[]
-    likes Like[]
+    email    String    @unique
+    isadmin  Boolean   @default(false)
+    posts    post[]
+    comments comment[]
+    likes    like[]
 }
 
-model Receip {
-    id_receip String @id
-    Receip_Type String
-    Time_Of_Preparation DateTime
-    ingredients IngredientInReceip[]
-    materials MaterialInReceip[]
-    posts Post[]
+model recipe {
+    id_recipe           String               @id
+    time_of_preparation Int
+    ingredients         ingredientinrecipe[]
+    posts               post[]
+    name                String
+    description         String
+    number_of_person    Int
+    recipetypeid        String
+    recipetype          recipe_type          @relation(fields: [recipetypeid], references: [id_recipe_type])
 }
 
-model Ingredient {
-    id_ingredient String @id
-    Name String
-    receips IngredientInReceip[]
+model recipe_type {
+    id_recipe_type String   @id
+    name           String
+    recipes        recipe[]
+    posts          post[]
 }
 
-model IngredientInReceip {
-    id String @id @default(uuid())
-    quantity Int
-    unit String
-    receipId String
-    ingredientId String
-    receip Receip @relation(fields: [receipId], references: [id_receip])
-    ingredient Ingredient @relation(fields: [ingredientId], references: [id_ingredient])
+model ingredient {
+    id_ingredient String               @id
+    name          String
+    recipes       ingredientinrecipe[]
 }
 
-model Material {
-    id_material String @id
-    Name String
-    receips MaterialInReceip[]
+model ingredientinrecipe {
+    id           String     @id @default(uuid())
+    quantity     Int
+    unit         String
+    recipeid     String
+    ingredientid String
+    recipe       recipe     @relation(fields: [recipeid], references: [id_recipe])
+    ingredient   ingredient @relation(fields: [ingredientid], references: [id_ingredient])
 }
 
-model MaterialInReceip {
-    id String @id @default(uuid())
-    quantity Int
-    unit String
-    receipId String
-    materialId String
-    receip Receip @relation(fields: [receipId], references: [id_receip])
-    material Material @relation(fields: [materialId], references: [id_material])
+model post {
+    id_post      String      @id
+    title        String
+    content      String
+    date         DateTime
+    user         user        @relation(fields: [iduser], references: [id])
+    iduser       String      @map("id_user")
+    recipe       recipe      @relation(fields: [idrecipe], references: [id_recipe])
+    idrecipe     String
+    recipetypeid String
+    recipetype   recipe_type @relation(fields: [recipetypeid], references: [id_recipe_type])
+    comments     comment[]
+    likes        like[]
 }
 
-model Post {
-    id_post String @id
-    Title String
-    Content String
-    Date DateTime
-    User User @relation(fields: [idUser], references: [id])
-    idUser String @map("id_user")
-    Receip Receip @relation(fields: [idReceip], references: [id_receip])
-    idReceip String
-    comments Comment[]
-    likes Like[]
+model comment {
+    id_comment String   @id
+    content    String
+    date       DateTime
+    user       user     @relation(fields: [iduser], references: [id])
+    iduser     String   @map("id")
+    post       post     @relation(fields: [idpost], references: [id_post])
+    idpost     String   @map("id_post")
 }
 
-model Comment {
-    id_comment String @id
-    Content String
-    Date DateTime
-    User User @relation(fields: [idUser], references: [id])
-    idUser String @map("id")
-    Post Post @relation(fields: [idPost], references: [id_post])
-    idPost String @map("id_post")
-}
-
-model Like {
+model like {
     id_like String @id
-    User User @relation(fields: [idUser], references: [id])
-    idUser String @map("id")
-    Post Post @relation(fields: [idPost], references: [id_post])
-    idPost String @map("id_post")
+    user    user   @relation(fields: [iduser], references: [id])
+    iduser  String @map("id")
+    post    post   @relation(fields: [idpost], references: [id_post])
+    idpost  String @map("id_post")
 }

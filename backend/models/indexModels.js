@@ -14,9 +14,13 @@ async function createUser(data, res) {
                 pseudo: data.pseudo,
             },
         });
-        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1h' });
-        res.cookie('token', token, { httpOnly: true });
-        res.status(200).json({ user, auth: true, token: token });
+        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1 hour' });
+        res.cookie('token', token, {
+            expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
+            httpOnly: true,
+            sameSite: true,
+        }).status(200).json({ user, auth: true, token: token });
+
     }
     catch (error) {
         res.status(500).json({ error: `Error creating user: ${error.message}` });
@@ -39,15 +43,18 @@ async function loginUser(data, res) {
         const passwordIsValid = bcrypt.compareSync(data.password, user.password);
 
         if (!passwordIsValid) {
-            throw new Error('Invalid password.');
+            throw new Error('Invalid Password or email.');
         }
 
         // If the passwords match, the login is successful
         // Generate a token
-        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id }, 'tiensletoken', { expiresIn: '1 hour' });
         // Set the token as a cookie
-        res.cookie('token', token, { httpOnly: true });
-        // Send the token to the client
+        res.cookie('token', token, {
+            expires: new Date(Date.now() + 60 * 60 * 1000), // 1 hour from now
+            httpOnly: true,
+            sameSite: true, // set 'SameSite' attribute to 'None'
+          });
         return { auth: true, token: token };
         
 
@@ -57,12 +64,12 @@ async function loginUser(data, res) {
     }
 }
 
-async function logoutUser(req, res) {
+async function logoutUser(res) {
     try {
         // Clear the token cookie
         res.clearCookie('token');
         // Send a response to the client
-        res.status(200).json({ auth: false, token: null, message: 'You have been logged out.' });
+        res.status(200).json({ auth: false, token: null, message: 'You have been logged out.', event: 'auth' });
     } catch (error) {
         // Send an error response to the client
         res.status(500).json({ error: `Error during logout: ${error.message}` });
@@ -72,6 +79,7 @@ async function logoutUser(req, res) {
 // Middleware to verify JWT token
 function verifyToken(req, res, next) {
     const token = req.cookies.token;
+    console.log("aaaaa");
     if (!token) {
         return res.status(403).send({ auth: false, message: 'No token provided.' });
     }
@@ -118,6 +126,22 @@ async function updatePseudo(req, res) {
         throw new Error(`Error updating pseudo: ${error.message}`);
     }
 }
+
+async function checkAdmin(req, res) {
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: req.userId,
+                isadmin: true
+            }
+        });
+        res.json({ isAdmin: user !== null });
+    }
+    catch (error) {
+        res.status(500).json({ error: `Error checking auth: ${error.message}` });
+    }
+}
+
 async function deleteUser(data) {
     try {
         const user = await prisma.user.delete({
@@ -142,4 +166,4 @@ async function getUser(data) {
     }
 }
 
-module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser };
+module.exports = { createUser, loginUser, updatePassword, updatePseudo, deleteUser, getUser, verifyToken, logoutUser, };
