@@ -111,21 +111,27 @@ async function updatePseudo(req, res) {
     }
 }
 
-async function checkAdmin(req, res) {
+async function checkAdmin(req, res, next) {
+
     try {
         const user = await prisma.user.findUnique({
             where: {
-                id: req.userId,
-                isadmin: true
+                id: req.userId
             }
         });
-        return user !== null; // Returns true if the user is admin, otherwise false
+
+        console.log('User found:', user);
+
+        if (user && user.isadmin) {
+            next(); // User is admin, proceed to the next middleware or route handler
+        } else {
+            res.status(403).send({ auth: false, message: 'Access denied: Admins only.' });
+        }
     } catch (error) {
         console.error(`Error checking auth: ${error.message}`);
-        return false; // In case of an error, consider the user as not admin
+        res.status(500).send({ auth: false, message: 'Failed to check admin status.' });
     }
 }
-
 async function deleteUser(data) {
     try {
         const user = await prisma.user.delete({

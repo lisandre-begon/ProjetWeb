@@ -90,7 +90,6 @@ exports.deleteUser = async (req, res) => {
 exports.checkAdmin = async (req, res) => {
     try {
         if (!req.userId) {
-            console.log("User ID is required");
             return res.status(400).json({ error: 'User ID is required' });
         }
 

@@ -10,13 +10,8 @@ router.get('/logout', logoutUser);
 
 // Protected routes
 router.get('/getUser', verifyToken, getUser);
-router.get('/admin', verifyToken, async (req, res) => {
-    const isAdmin = await checkAdmin(req, res);
-    if (isAdmin) {
-        res.status(200).send({ isAdmin: true });
-    } else {
-        res.status(403).send({ isAdmin: false });
-    }
+router.get('/admin', verifyToken, checkAdmin, (req, res) => {
+    res.status(200).send({ isAdmin: true });
 });
 router.put('/updatePassword', verifyToken, updatePassword);
 router.put('/updatePseudo', verifyToken, updatePseudo);
