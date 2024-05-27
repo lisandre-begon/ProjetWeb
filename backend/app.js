@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const indexRouter = require('./routes/indexRoutes');
 const http = require('http');
+const receiptRoutes = require('./routes/recipeRoutes');
 
 const app = express();
 const { checkAdmin } = require('./controllers/indexControllers');
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/', indexRouter);
+app.use('/recipes', receiptRoutes);
 
 app.get('/profil', verifyToken, async (req, res) => {
   const isAdmin = await checkAdmin(req, res);

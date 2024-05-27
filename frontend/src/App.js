@@ -4,14 +4,14 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import AuthContext from './components/AuthContext';
 import Home from './pages/Home';
-import About from './pages/About';
 import ProfilUser from './pages/ProfilUser';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Admin from './pages/Admin';
+import Recipe from './pages/Recipe';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('token'));
+  const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('token')); 
 
   useEffect(() => {
     const checkAuth = () => {
@@ -32,11 +32,11 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
           <Route path="/profil" element={<ProfilUser />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/recipes" element={<Recipe />} />
         </Routes>
       </Router>
     </AuthContext.Provider>

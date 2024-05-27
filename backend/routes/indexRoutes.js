@@ -15,6 +15,6 @@ router.get('/admin', verifyToken, checkAdmin, (req, res) => {
 });
 router.put('/updatePassword', verifyToken, updatePassword);
 router.put('/updatePseudo', verifyToken, updatePseudo);
-router.delete('/:email', verifyToken, deleteUser);
+router.delete('/:email', deleteUser);
 
 module.exports = router;

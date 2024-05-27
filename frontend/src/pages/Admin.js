@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const Admin = () => {
+    const [users, setUsers] = useState([]);
+    const [selectedUser, setSelectedUser] = useState("");
+    const [recipes, setRecipes] = useState([]);
+    const [selectedRecipe, setSelectedRecipe] = useState("");
+
     useEffect(() => {
         const checkAdmin = async () => {
             try {
@@ -9,6 +14,7 @@ const Admin = () => {
                 if (response.status === 200 && response.data.isAdmin) {
                     console.log('User is admin');
                     fetchUsers(); // Fetch the list of users when user is admin
+                    fetchRecipes(); // Fetch the list of recipes when user is admin
                 } else {
                     window.location.href = '/profil';
                 }
@@ -19,9 +25,6 @@ const Admin = () => {
         };
         checkAdmin();
     }, []);
-
-    const [users, setUsers] = useState([]);
-    const [selectedUser, setSelectedUser] = useState('');
 
     const fetchUsers = async () => {
         try {
@@ -36,39 +39,47 @@ const Admin = () => {
                 console.log('No users found');
             } else {
                 console.log('Response from getUser:', response.data);
-            }
-    
-            if (response.status === 200) {
-                // Extraire le tableau d'utilisateurs de la propriété 'user' de la réponse
-                const userList = response.data.user;
-                setUsers(userList); // Définir l'état 'users' avec le tableau d'utilisateurs
-            } else {
-                throw new Error('Failed to fetch users');
+                setUsers(response.data.user);
             }
         } catch (error) {
             console.error('Failed to fetch users', error);
         }
     };
+
+    const fetchRecipes = async () => {
+        try {
+            console.log('Fetching recipes...');
+            const response = await axios.get('http://localhost:5000/recipes');
     
-    
-    
+            if (response.status === 200) {
+                setRecipes(response.data);
+            }
+        } catch (error) {
+            console.error(`Error fetching recipes: ${error}`);
+        }
+    };
 
     const deleteUser = async () => {
         try {
-            const response = await axios.delete(`http://localhost:5000/${selectedUser}`, {
-                data: { email: selectedUser },
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            });
-
+            const response = await axios.delete(`http://localhost:5000/${selectedUser}`);
             if (response.status === 200) {
-                console.log('User deleted');
-                fetchUsers(); // Fetch the updated list of users after deletion
-            } else {
-                console.error('Failed to delete user');
+                setUsers(users.filter(user => user.email !== selectedUser));
+                setSelectedUser("");
             }
         } catch (error) {
-            console.error('Failed to delete user', error);
+            console.error(`Error deleting user: ${error}`);
+        }
+    };
+
+    const deleteRecipe = async () => {
+        try {
+            const response = await axios.delete(`http://localhost:5000/recipes/${selectedRecipe}`);
+            if (response.status === 200) {
+                setRecipes(recipes.filter(recipe => recipe.id_recipe !== selectedRecipe));
+                setSelectedRecipe("");
+            }
+        } catch (error) {
+            console.error(`Error deleting recipe: ${error}`);
         }
     };
 
@@ -82,6 +93,14 @@ const Admin = () => {
                 ))}
             </select>
             <button onClick={deleteUser}>Delete User</button>
+
+            <select value={selectedRecipe} onChange={(e) => setSelectedRecipe(e.target.value)}>
+                <option value="">Select recipe to delete</option>
+                {Array.isArray(recipes) && recipes.map((recipe, index) => (
+                    <option key={index} value={recipe.id_recipe}>{recipe.name}</option>
+                ))}
+            </select>
+            <button onClick={deleteRecipe}>Delete Recipe</button>
         </div>
     );
 };
