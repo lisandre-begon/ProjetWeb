@@ -1,6 +1,7 @@
 import React from 'react';
 import gsap from 'gsap';
 import ReactDOM from 'react-dom/client';
+import { useNavigate } from 'react-router-dom';
 import '../styles/Home.scss'; 
 
 
@@ -84,41 +85,49 @@ const Home = () => {
     }, []);
   
     return (
-      <div className="app-container">
-        <header className="header">
-          <nav>
-            <a href="#first">Recettes </a>
-            <a href="#second">Communauté </a>
-            <a href="#third">Profil </a>
-            <a href="#fourth">Ingrédients </a>
-            <a href="#fifth">Défi du jour</a>
-          </nav>
-        </header>
-        <Section id="first" title="Recettes" className="first" videoUrl={"/video/omelet.mp4"} />
-        <Section id="second" title="Communauté" className="second" bgUrl="https://images.unsplash.com/photo-1503796964332-e25e282e390f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1NTR8&ixlib=rb-4.0.3&q=85" />
-        <Section id="third" title="Profil" className="third" bgUrl="https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM1OTh8&ixlib=rb-4.0.3&q=85" />
-        <Section id="fourth" title="Ingrédients" className="fourth" bgUrl="https://images.unsplash.com/photo-1584351583369-6baf055b51a7?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
-        <Section id="fifth" title="Défi du jour" className="fifth" bgUrl="https://images.unsplash.com/photo-1516663713099-37eb6d60c825?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE2OTg2OTM4MTB8&ixlib=rb-4.0.3&q=85" />
+      <div className='home-page'>
+        <div className="app-container">
+          <header className="header">
+            <nav>
+              <a href="#first">Recipe </a>
+              <a href="#second">Profil </a>
+              <a href="#third">Mistery </a>
+              <a href="#fourth">Login/Logout</a>
+            </nav>
+          </header>
+          <Section id="first" title="Recipe" className="first" bgUrl={"https://cdn.apartmenttherapy.info/image/fetch/f_auto,q_auto:eco,c_fill,g_auto,w_1500,ar_3:2/https%3A%2F%2Fs3.amazonaws.com%2Fpixtruder%2Foriginal_images%2Ff5cffedb779ce8ea3991f8020b5616d39ef6c0ee"} />
+          <Section id="second" title="Profil" className="second" bgUrl="https://images.ctfassets.net/pdf29us7flmy/R2CvQwSAB5dXyOzRIPQFI/3c0fa14cc647c5f48647330c88022230/GettyImages-143922758_optimized.jpg" />
+          <Section id="third" className="third" bgUrl="https://i.ytimg.com/vi/WxF5tJE-ub0/maxresdefault.jpg" />
+          <Section id="fourth" title="Login/Logout" className="fourth" bgUrl="https://static.vecteezy.com/system/resources/previews/007/910/763/original/login-and-logout-icons-enter-and-exit-symbols-sign-in-and-sign-out-pictograms-vector.jpg" />
+        </div>
       </div>
     );
   };
-const Section = ({ id, title, className, bgUrl, videoUrl }) => {
+const Section = ({ id, title, className, bgUrl}) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (id === 'first') {
+      navigate('/recipes');
+    }else if (id === 'second') {
+      navigate('/profil');
+    }else if (id === 'third') {
+      navigate('/mistery');
+    }else if (id === 'fourth') {
+      navigate('/login');
+    }
+  }
   return (
-    <section id={id} className={`section ${className}`}>
-      <div className="wrapper-outer">
-        <div className="wrapper-inner">
-          <div className="background" style={{ backgroundImage: `url(${bgUrl})` }}>
-            <h2 className="section-title">{title}</h2>
-            {videoUrl && (
-              <video autoPlay loop muted>
-                <source src={videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
+    <div className="home-page" id={id} onClick={handleClick}>
+      <section id={id} className={`section ${className}`}>
+        <div className="wrapper-outer">
+          <div className="wrapper-inner">
+            <div className="background" style={{ backgroundImage: `url(${bgUrl})` }}>
+              <h2 className="section-title">{title}</h2>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }; const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<Home />);

@@ -9,6 +9,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Admin from './pages/Admin';
 import Recipe from './pages/Recipe';
+import Mistery from './pages/Mistery';
+import Navbar from './components/Navbar';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(!!Cookies.get('token')); 
@@ -17,30 +19,28 @@ const App = () => {
     const checkAuth = () => {
       setIsAuthenticated(!!Cookies.get('token'));
     };
-
-    // Listen for custom event
     window.addEventListener('auth', checkAuth);
 
     return () => {
-      // Clean up the event listener when the component unmounts
       window.removeEventListener('auth', checkAuth);
     };
   }, []);
 
   return (
     <AuthContext.Provider value={isAuthenticated}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profil" element={<ProfilUser />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/recipes" element={<Recipe />} />
-        </Routes>
-      </Router>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/recipes" element={<><Navbar /><Recipe /></>} />
+                <Route path="/profil" element={<><Navbar /><ProfilUser /></>} />
+                <Route path="/mistery" element={<><Navbar /><Mistery /></>} />
+                <Route path="/admin" element={<><Navbar /><Admin /></>} />
+            </Routes>
+        </Router>
     </AuthContext.Provider>
-  );
+    );
 };
 
 export default App;

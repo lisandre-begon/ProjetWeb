@@ -20,6 +20,32 @@ async function getAllRecipes() {
     }
 }
 
+async function getRandomRecipe() {
+    try {
+        const recipes = await prisma.recipe.findMany({
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
+                posts: true,
+                recipetype: true,
+            },
+        });
+        if (recipes.length === 0) {
+            throw new Error("No recipes found in the database.");
+        }
+        // Select a random recipe
+        const randomIndex = Math.floor(Math.random() * recipes.length);
+        const randomRecipe = recipes[randomIndex];
+        return randomRecipe;
+    } catch (error) {
+        console.error(`Failed to fetch random recipe: ${error.message}`);
+        throw error;  // Rethrow to handle it in the calling context
+    }
+}
+
 async function createRecipe(data) {
     try {
         // Check if all ingredients exist
@@ -90,4 +116,4 @@ async function getIngredientsByRecipeId(recipeId) {
 }
 
 
-module.exports = { getAllRecipes, createRecipe, deleteRecipe, getIngredientsByRecipeId };
+module.exports = { getAllRecipes, createRecipe, deleteRecipe, getIngredientsByRecipeId, getRandomRecipe };

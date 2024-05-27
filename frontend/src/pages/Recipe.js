@@ -14,8 +14,10 @@ function RecipePage() {
 
   return (
     <div className="recipe-page">
-      <RecipeList recipes={recipes} />
-    </div>
+      <div className="recipe-card">
+        <RecipeList recipes={recipes} />
+      </div>
+  </div>
   );
 }
 

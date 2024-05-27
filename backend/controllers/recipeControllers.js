@@ -12,6 +12,24 @@ exports.getRecipes = async (req, res) => {
     }
 };
 
+exports.getRandomRecipe = async (req, res) => {
+    try {
+        const recipes = await prisma.recipe.findMany({
+            include: {
+                ingredients: {
+                    include: {
+                        ingredient: true,
+                    },
+                },
+            },
+        });
+        const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+        res.json(randomRecipe);
+    } catch (error) {
+        res.status(500).json({ error: `Failed to fetch a random recipe: ${error.message}` });
+    }
+};
+
 exports.addRecipe = async (req, res) => {
     try {
         const data = req.body;

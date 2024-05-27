@@ -25,11 +25,11 @@ function RecipeCard({ recipe }) {
   return (
     <div className="recipe-card">
       <div className="header">
-        <h2 className="recipe-title">{recipe.name}</h2>
+        <h2 className="recipe-title">{recipe.name} - {recipe.recipetype?.name || 'Type non spécifié'}</h2>
       </div>
       <div className="content">
         <div className="image">
-          <img src={recipe.photo} alt={recipe.name} />
+          <img src={recipe.photo} alt={recipe.name} style={{ maxHeight: '300px', width: 'auto' }} />
         </div>
         <div className="details">
           <div className="tabs">
@@ -64,6 +64,7 @@ function RecipeCard({ recipe }) {
           </div>
         </div>
       </div>
+      <div style={{ paddingBottom: '20px' }}></div> {/* Ajout d'espace en bas */}
     </div>
   );
 }
