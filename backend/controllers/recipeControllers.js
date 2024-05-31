@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-const { getAllRecipes, createRecipe, deleteRecipe, getIngredientsByRecipeId } = require('../models/recipeModels');
+const { getAllRecipes, createRecipe, deleteRecipe, getIngredientsByRecipeId, getRandomRecipe } = require('../models/recipeModels');
 
 exports.getRecipes = async (req, res) => {
     try {
@@ -14,16 +14,7 @@ exports.getRecipes = async (req, res) => {
 
 exports.getRandomRecipe = async (req, res) => {
     try {
-        const recipes = await prisma.recipe.findMany({
-            include: {
-                ingredients: {
-                    include: {
-                        ingredient: true,
-                    },
-                },
-            },
-        });
-        const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+        const randomRecipe = await getRandomRecipe(); // Use the function from the models
         res.json(randomRecipe);
     } catch (error) {
         res.status(500).json({ error: `Failed to fetch a random recipe: ${error.message}` });

@@ -98,7 +98,7 @@ const Home = () => {
           <Section id="first" title="Recipe" className="first" bgUrl={"https://cdn.apartmenttherapy.info/image/fetch/f_auto,q_auto:eco,c_fill,g_auto,w_1500,ar_3:2/https%3A%2F%2Fs3.amazonaws.com%2Fpixtruder%2Foriginal_images%2Ff5cffedb779ce8ea3991f8020b5616d39ef6c0ee"} />
           <Section id="second" title="Profil" className="second" bgUrl="https://images.ctfassets.net/pdf29us7flmy/R2CvQwSAB5dXyOzRIPQFI/3c0fa14cc647c5f48647330c88022230/GettyImages-143922758_optimized.jpg" />
           <Section id="third" className="third" bgUrl="https://i.ytimg.com/vi/WxF5tJE-ub0/maxresdefault.jpg" />
-          <Section id="fourth" title="Login/Logout" className="fourth" bgUrl="https://static.vecteezy.com/system/resources/previews/007/910/763/original/login-and-logout-icons-enter-and-exit-symbols-sign-in-and-sign-out-pictograms-vector.jpg" />
+          <Section id="fourth" title="Login/Logout" className="fourth" bgUrl="https://w.wallhaven.cc/full/eo/wallhaven-eo658o.png" />
         </div>
       </div>
     );

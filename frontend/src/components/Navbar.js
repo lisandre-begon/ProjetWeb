@@ -12,6 +12,7 @@ const Navbar = () => {
 
     return (
         <nav className="navbar">
+            <Link to="/" className="button">Home</Link>
             <Link to="/recipes" className="button">Recipe</Link>
             <Link to="/profil" className="button">Profil</Link>
             <Link to="/mistery" className="button">Mistery</Link>
