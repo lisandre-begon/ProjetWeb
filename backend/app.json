@@ -1,0 +1,25 @@
+{
+    "name": "cuilinaryback",
+    "scripts": {
+      "dokku": {
+        "predeploy": "npm install --production",
+        "postdeploy": "echo 'Deployed!'"
+      }
+    },
+    "healthchecks": {
+      "web": [
+        {
+          "id": "default",
+          "http_method": "GET",
+          "path": "/",
+          "port": 5000,
+          "initial_delay_seconds": 10,
+          "timeout_seconds": 5,
+          "period_seconds": 10,
+          "success_threshold": 1,
+          "failure_threshold": 3
+        }
+      ]
+    }
+  }
+  
